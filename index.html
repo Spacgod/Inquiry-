@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UndergroundPC - Add New Customer</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Import fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;600;700&display=swap');
+
+        /* --- General & Layout Styles (Copied from index.html for consistency) --- */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #f0f0f0;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Footer (Copied from index.html for general styling, modified for simplified header) */
+        header {
+            background-color: rgba(26, 26, 26, 0.9); /* Slightly transparent dark background */
+            backdrop-filter: blur(8px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: center; /* Centered the content */
+            align-items: center;
+            position: relative; /* Added for positioning the button */
+        }
+
+        .site-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #e82c2c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .site-logo:hover {
+            color: #ff3f3f;
+        }
+
+        /* Invoice Button Style */
+        .invoice-btn {
+            position: absolute;
+            right: 20px; /* Adjust as needed for spacing from the right edge */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e82c2c;
+            color: white;
+            border: 2px solid #e82c2c;
+            padding: 8px 15px; /* Smaller padding for header button */
+            font-size: 1em; /* Smaller font size */
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .invoice-btn:hover {
+            background-color: #ff3f3f;
+            border-color: #ff3f3f;
+        }
+
+        /* Removed styles for header-nav, shop-btn, menu-toggle as they are no longer in the header */
+
+        /* Removed Footer Styles as the footer is being removed */
+
+        /* General Utility & Message Box (Copied from index.html) */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            text-align: center;
+        }
+        .message-box.success {
+            background-color: #4CAF50;
+        }
+        .message-box.error {
+            background-color: #f44336;
+        }
+        .message-box button {
+            background-color: #fff;
+            color: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .message-box button:hover {
+            background-color: #eee;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Section Layout & Typography (Copied from index.html) */
+        .section-padding {
+            padding: 80px 0;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 60px;
+            color: #fff;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+        }
+
+        /* Button Styling (Copied from index.html) */
+        .btn-primary {
+            background-color: #e82c2c;
+            color: white;
+            border: 2px solid #e82c2c;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #ff3f3f;
+            border-color: #ff3f3f;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        /* --- New Customer Form Specific Styles --- */
+        .new-customer-section {
+            background: url('background.png') no-repeat center center/cover; /* Using the background from index.html */
+            position: relative;
+            z-index: 1;
+            color: white;
+            min-height: calc(100vh - 100px); /* Adjust min-height to fill viewport better without footer */
+            display: flex;
+            align-items: center; /* Center content vertically if it doesn't fill the height */
+            padding-top: 40px; /* Add some top padding */
+            padding-bottom: 40px; /* Add some bottom padding */
+        }
+
+        .customer-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.08); /* Slightly lighter background for the form */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-subtitle {
+            font-size: 2em;
+            color: #e82c2c; /* Red for sub-titles */
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f0f0f0;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.3); /* Darker input background */
+            color: #f0f0f0;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="tel"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group textarea:focus {
+            border-color: #e82c2c; /* Highlight on focus */
+            background-color: rgba(0, 0, 0, 0.5);
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px;
+        }
+
+        .customer-form .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            margin-top: 30px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .section-padding {
+                padding: 60px 0;
+            }
+            .section-title {
+                font-size: 2.2em;
+                margin-bottom: 40px;
+            }
+            .customer-form {
+                padding: 25px;
+            }
+            .form-subtitle {
+                font-size: 1.8em;
+                margin-top: 30px;
+                margin-bottom: 20px;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-group label {
+                font-size: 1em;
+            }
+            .form-group input,
+            .form-group textarea {
+                padding: 10px 12px;
+                font-size: 0.95em;
+            }
+            .customer-form .btn-primary {
+                padding: 12px;
+                font-size: 1.1em;
+                margin-top: 20px;
+            }
+            .invoice-btn {
+                right: 15px; /* Adjust for smaller screens */
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container" style="justify-content: center;">
+            <a href="index.html" class="site-logo">UndergroundPC</a>
+            <a href="invoice.html" class="invoice-btn">Invoice</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="new-customer-section section-padding" role="region" aria-labelledby="new-customer-title">
+            <div class="container">
+                <h1 id="new-customer-title" class="section-title">Add New Customer Inquiry</h1>
+                <form id="new-customer-form" class="customer-form" action="https://formspree.io/f/mzzgdjnk" method="POST">
+                    <div class="form-group">
+                        <label for="customerName">Customer Name:</label>
+                        <input type="text" id="customerName" name="Customer Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerEmail">Email:</label>
+                        <input type="email" id="customerEmail" name="Email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerPhone">Phone (Optional):</label>
+                        <input type="tel" id="customerPhone" name="Phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inquiryDate">Inquiry Date:</label>
+                        <input type="date" id="inquiryDate" name="Inquiry Date" required>
+                    </div>
+
+                    <h2 class="form-subtitle">Desired PC Specifications</h2>
+
+                    <div class="form-group">
+                        <label for="budget">Budget (Optional):</label>
+                        <input type="number" id="budget" name="Budget" placeholder="$">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpu">CPU:</label>
+                        <input type="text" id="cpu" name="CPU" placeholder="e.g., Intel Core i7-14700K, AMD Ryzen 7 7800X3D">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gpu">GPU:</label>
+                        <input type="text" id="gpu" name="GPU" placeholder="e.g., NVIDIA GeForce RTX 4070, AMD Radeon RX 7800 XT">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ram">RAM:</label>
+                        <input type="text" id="ram" name="RAM" placeholder="e.g., 32GB DDR5 6000MHz">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storage">Storage:</label>
+                        <input type="text" id="storage" name="Storage" placeholder="e.g., 1TB NVMe SSD + 2TB HDD">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motherboard">Motherboard:</label>
+                        <input type="text" id="motherboard" name="Motherboard" placeholder="e.g., ASUS ROG STRIX B650E-F, MSI MPG Z790 CARBON WIFI">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="psu">Power Supply (PSU):</label>
+                        <input type="text" id="psu" name="PSU" placeholder="e.g., 850W 80+ Gold">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="case">Case:</label>
+                        <input type="text" id="case" name="Case" placeholder="e.g., Lian Li O11 Dynamic EVO, Fractal Design North">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cooling">Cooling:</label>
+                        <input type="text" id="cooling" name="Cooling" placeholder="e.g., 360mm AIO, Air Cooler">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="operatingSystem">Operating System:</label>
+                        <input type="text" id="operatingSystem" name="Operating System" placeholder="e.g., Windows 11 Home, No OS">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalNotes">Additional Notes / Special Requests:</label>
+                        <textarea id="additionalNotes" name="Additional Notes" rows="5" placeholder="Any specific aesthetic requests, peripherals, or other details..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Inquiry</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div id="success-message-box" class="message-box success hidden">
+        <p id="success-message-content"></p>
+        <button onclick="document.getElementById('success-message-box').classList.add('hidden');">OK</button>
+    </div>
+
+    <div id="error-message-box" class="message-box error hidden">
+        <p id="error-message-content"></p>
+        <button onclick="document.getElementById('error-message-box').classList.add('hidden');">OK</button>
+    </div>
+
+    <script>
+        // Function to show message boxes
+        function showMessageBox(type, message) {
+            const successBox = document.getElementById('success-message-box');
+            const errorBox = document.getElementById('error-message-box');
+            const successContent = document.getElementById('success-message-content');
+            const errorContent = document.getElementById('error-message-content');
+
+            // Hide both boxes first
+            successBox.classList.add('hidden');
+            errorBox.classList.add('hidden');
+            successBox.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            if (type === 'success') {
+                successContent.textContent = message;
+                successBox.classList.remove('hidden');
+                successBox.style.display = 'block';
+            } else if (type === 'error') {
+                errorContent.textContent = message;
+                errorBox.classList.remove('hidden');
+                errorBox.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const newCustomerForm = document.getElementById('new-customer-form');
+
+            if (newCustomerForm) {
+                newCustomerForm.addEventListener('submit', async (event) => { // Added 'async' keyword
+                    event.preventDefault(); // Prevent default form submission
+
+                    const form = event.target;
+                    const formData = new FormData(form);
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (response.ok) {
+                            showMessageBox('success', `Inquiry submitted successfully! You will receive an email shortly.`);
+                            form.reset(); // Clear the form after successful submission
+                        } else {
+                            // Formspree returns an error response with a JSON body
+                            const data = await response.json();
+                            let errorMessage = 'An error occurred during submission. Please try again.';
+                            if (data.errors) {
+                                errorMessage = `Submission failed: ${data.errors.map(e => e.message).join(', ')}`;
+                            }
+                            showMessageBox('error', errorMessage);
+                        }
+                    } catch (error) {
+                        console.error('Network error or problem submitting the form:', error);
+                        showMessageBox('error', 'Network error or problem submitting the form. Please check your internet connection and try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
